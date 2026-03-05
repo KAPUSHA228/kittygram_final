@@ -2,14 +2,14 @@ volumes:
   pg_data:
   static:
   media:
+  frontend_build:
 
 services:
   db:
     image: postgres:13
     env_file: .env
-
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - pg_data/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
@@ -17,7 +17,7 @@ services:
       retries: 5
 
   backend:
-    build: ./backend/
+    image: ${DOCKERHUB_USERNAME}/kittygram_backend:latest
     env_file: .env
     depends_on:
       db:
@@ -27,28 +27,16 @@ services:
       - media:/app/media
     command: >
       sh -c "python manage.py migrate &&
-             python manage.py collectstatic --noinput &&
              gunicorn kittygram_backend.wsgi:application --bind 0.0.0.0:8000"
-  
-  frontend:
-    env_file: .env
-    build: ./frontend/
-    depends_on:
-      - backend
-    command: sh -c "npm run build &&
-                    cp /app/build/index.html /app/static/ &&
-                    cp /app/build/manifest.json /app/static/ 2>/dev/null || true &&
-                    cp -r /app/build/static/* /app/static/"
-    volumes:
-      - static:/app/static
-  
+
   gateway:
-    build: ./nginx/
+    image: ${DOCKERHUB_USERNAME}/kittygram_gateway:latest
     env_file: .env
     ports:
       - "80:80"
     depends_on:
       - backend
     volumes:
+      - frontend_build:/app/frontend_build
       - static:/app/static
       - media:/app/media

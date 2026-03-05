@@ -1,4 +1,4 @@
 repo_owner: KAPUSHA228
-kittygram_domain: https://github.com/KAPUSHA228/kittygram_final
-taski_domain: https://github.com/KAPUSHA228/taski-docker
+kittygram_domain: https://localhost
+taski_domain: https://localhost:8000
 dockerhub_username: kapusha228
