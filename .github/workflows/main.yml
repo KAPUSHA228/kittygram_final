@@ -9,8 +9,8 @@ on:
       - main
 
 env:
-  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
   TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
 
@@ -47,7 +47,6 @@ jobs:
           cd backend
           python -m pip install --upgrade pip 
           pip install -r requirements.txt
-          pip install ruff
       - name: Run ruff check
         run: |
           cd backend
@@ -58,13 +57,13 @@ jobs:
           python manage.py test
         env:
           DJANGO_SECRET_KEY: test-key
-          ALLOWED_HOSTS: localhost
+          ALLOWED_HOSTS: localhost,testserver
           POSTGRES_DB: kittygram_test
           POSTGRES_USER: kittygram_user
           POSTGRES_PASSWORD: test_password
           DB_HOST: localhost
           DB_PORT: 5432
-          DEBUG: False
+          DEBUG: 'True'
 
   frontend_tests:
     runs-on: ubuntu-latest
@@ -128,7 +127,7 @@ jobs:
     steps:
       - name: Send Message
         run: |
-          MESSAGE="✅ Kittygram CI/CD завершён!
+          MESSAGE="Kittygram CI/CD завершён!
           👤 Автор: ${{ github.actor }}
           💬 Коммит: ${{ github.event.commits[0].message }}
           🔗 Коммит: https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
