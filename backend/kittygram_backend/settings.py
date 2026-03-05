@@ -69,7 +69,7 @@ else:
         		'USER': os.getenv('POSTGRES_USER', 'django'),
         		'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
         		'HOST': os.getenv('DB_HOST', ''),
-        		'PORT': os.getenv('DB_PORT', 5432)
+        		'PORT': os.getenv('DB_PORT', '5432')
     		}
 	}
 
@@ -108,7 +108,6 @@ STATIC_ROOT = BASE_DIR / 'collected_static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
